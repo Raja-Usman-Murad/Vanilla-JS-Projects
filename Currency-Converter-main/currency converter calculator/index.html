@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>currency convrter</title>
+    <style>
+      input,
+      select {
+        margin: 2px;
+        width: 200px;
+        border: 2px solid lightblue;
+        outline: none;
+      }
+      span {
+        color: lightcoral;
+        font-size: 1.5rem;
+        font-weight: 900;
+        margin-left: 193px;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Currency Converter</h1>
+    <input type="number" />
+    <select name="" id="">
+    </select>
+    <br />
+    <span>=</span><br />
+    <input type="number" />
+    <select name="" id="">
+    </select>
+
+    <script>
+      let input = document.querySelectorAll("input");
+      console.log(input);
+
+      let select = document.querySelectorAll("select");
+      console.log(select.length);
+
+      let url =
+        "http://api.exchangeratesapi.io/v1/latest?access_key=0bcf90bc096e88b1ff1048d3f717cb04";
+
+      let html = "";
+
+      async function converter() {
+        let data = await fetch(url);
+        let dataRes = await data.json();
+        let rates = dataRes.rates;
+        let arr = Object.keys(rates);
+        console.log("dataRes", dataRes);
+        console.log("rates", rates);
+        console.log("arr", arr);
+        arr.map((item) => {
+          return (html += `<option value=${item}>${item}</option>`);
+        });
+        // console.log("html", html);
+        for (let index = 0; index < select.length; index++) {
+            const element = select[index];
+            element.innerHTML = html
+        }
+        function convert(i,j) {
+        input[i].value = input[j].value* rates[select[i].value] / rates[select[j].value];
+        }
+        // console.log(select[1].value);
+        input[0].addEventListener('keyup',()=> convert(1,0));
+        input[1].addEventListener('keyup',()=>convert(0,1));
+        select[0].addEventListener('change',()=>convert(1,0));
+        select[1].addEventListener('change',()=>convert(0,1));
+      }
+      converter();
+      
+    </script>
+  </body>
+</html>
